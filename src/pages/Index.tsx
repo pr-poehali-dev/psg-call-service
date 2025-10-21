@@ -1,68 +1,83 @@
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import Icon from '@/components/ui/icon';
 
 const Index = () => {
   const [countdown, setCountdown] = useState(1.5);
   const phoneNumber = '+74951234567';
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      window.location.href = `tel:${phoneNumber}`;
-    }, 1500);
+    const metrikaScript = document.createElement('script');
+    metrikaScript.innerHTML = `
+      (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j=0;j<document.scripts.length;j++){
+          if (document.scripts[j].src===r){return;}
+        }
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+      })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+      ym(12345678, "init", {
+           clickmap:true,
+           trackLinks:true,
+           accurateTrackBounce:true,
+           webvisor:true
+      });
+    `;
+    document.head.appendChild(metrikaScript);
+
+    const noscript = document.createElement('noscript');
+    noscript.innerHTML = '<div><img src="https://mc.yandex.ru/watch/12345678" style="position:absolute; left:-9999px;" alt="" /></div>';
+    document.body.appendChild(noscript);
 
     const interval = setInterval(() => {
-      setCountdown((prev) => Math.max(0, prev - 0.1));
+      setCountdown((prev) => {
+        if (prev <= 0.1) {
+          clearInterval(interval);
+          window.location.href = `tel:${phoneNumber}`;
+          return 0;
+        }
+        return prev - 0.1;
+      });
     }, 100);
 
     return () => {
-      clearTimeout(timer);
       clearInterval(interval);
+      document.head.removeChild(metrikaScript);
+      document.body.removeChild(noscript);
     };
   }, []);
 
-  const handleCall = () => {
-    window.location.href = `tel:${phoneNumber}`;
-  };
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#123d6b] via-[#0a2b50] to-[#061a33]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(0,191,255,0.1)_0%,_transparent_70%)]" />
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-[#123d6b] to-[#0a2b50] text-white text-center px-4">
+      <img 
+        src="https://vodochet.ru/assets/cache_image/img/company/logo_psg_240x0_818.png" 
+        alt="ПСГ" 
+        className="w-32 mb-6 animate-scale-in"
+      />
       
-      <div className="relative z-10 flex flex-col items-center text-center px-6 animate-fade-in">
-        <div className="mb-8 animate-scale-in">
-          <img 
-            src="https://vodochet.ru/assets/cache_image/img/company/logo_psg_240x0_818.png" 
-            alt="ПСГ" 
-            className="w-32 h-auto mx-auto drop-shadow-2xl"
-          />
-        </div>
+      <h1 className="text-2xl md:text-3xl font-semibold mb-3 animate-fade-in">
+        Соединяем с оператором ПСГ...
+      </h1>
+      
+      <p className="text-lg mb-2 opacity-90 animate-fade-in">
+        Звонок начнётся через <span className="font-bold text-[#00bfff]">{countdown.toFixed(1)}с</span>
+      </p>
+      
+      <p className="text-base mb-8 opacity-80 animate-fade-in">
+        Если звонок не начался автоматически, нажмите кнопку ниже 👇
+      </p>
 
-        <h1 className="text-3xl md:text-4xl font-semibold text-white mb-4">
-          Соединяем с оператором ПСГ...
-        </h1>
+      <a 
+        href={`tel:${phoneNumber}`}
+        className="inline-block px-7 py-3.5 bg-[#00bfff] text-white text-lg font-semibold rounded-lg 
+                   transition-all duration-300 hover:bg-[#0099cc] hover:scale-105 
+                   active:scale-95 no-underline animate-scale-in"
+      >
+        📞 Позвонить инженеру
+      </a>
 
-        <div className="mb-8 flex items-center gap-3">
-          <div className="relative w-12 h-12">
-            <div className="absolute inset-0 rounded-full border-4 border-[#00bfff] border-t-transparent animate-spin" />
-            <div className="absolute inset-2 rounded-full bg-[#00bfff] opacity-20" />
-          </div>
-          <p className="text-lg text-white/90">
-            {countdown > 0 ? `${countdown.toFixed(1)} сек` : 'Звоним...'}
-          </p>
-        </div>
-
-        <p className="text-white/80 mb-8 max-w-md">
-          Если звонок не начался автоматически, нажмите кнопку ниже 👇
-        </p>
-
-        <Button 
-          onClick={handleCall}
-          className="bg-[#00bfff] hover:bg-[#0099cc] text-white font-semibold px-8 py-6 text-lg rounded-lg shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,191,255,0.5)]"
-        >Позвонить Оператору</Button>
-      </div>
-
-      <footer className="absolute bottom-6 text-white/60 text-sm">
+      <footer className="absolute bottom-4 text-sm opacity-60">
         © ПСГ — Проект Сервис Групп
       </footer>
     </div>

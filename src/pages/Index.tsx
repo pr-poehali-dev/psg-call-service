@@ -15,19 +15,21 @@ const Index = () => {
         }
         k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
       })
-      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js?id=104761353", "ym");
 
-      ym(12345678, "init", {
+      ym(104761353, "init", {
+           ssr:true,
+           webvisor:true,
            clickmap:true,
-           trackLinks:true,
+           ecommerce:"dataLayer",
            accurateTrackBounce:true,
-           webvisor:true
+           trackLinks:true
       });
     `;
     document.head.appendChild(metrikaScript);
 
     const noscript = document.createElement('noscript');
-    noscript.innerHTML = '<div><img src="https://mc.yandex.ru/watch/12345678" style="position:absolute; left:-9999px;" alt="" /></div>';
+    noscript.innerHTML = '<div><img src="https://mc.yandex.ru/watch/104761353" style="position:absolute; left:-9999px;" alt="" /></div>';
     document.body.appendChild(noscript);
 
     const interval = setInterval(() => {

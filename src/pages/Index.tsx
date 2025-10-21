@@ -59,10 +59,7 @@ const Index = () => {
         <Button 
           onClick={handleCall}
           className="bg-[#00bfff] hover:bg-[#0099cc] text-white font-semibold px-8 py-6 text-lg rounded-lg shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(0,191,255,0.5)]"
-        >
-          <Icon name="Phone" size={24} className="mr-2" />
-          Позвонить инженеру
-        </Button>
+        >Позвонить Оператору</Button>
       </div>
 
       <footer className="absolute bottom-6 text-white/60 text-sm">
